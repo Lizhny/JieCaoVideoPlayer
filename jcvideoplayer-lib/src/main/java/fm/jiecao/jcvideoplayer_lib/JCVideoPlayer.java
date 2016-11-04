@@ -40,6 +40,7 @@ import java.util.TimerTask;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
+ * jcvp
  * Created by Nathen on 16/7/30.
  */
 public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayerListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener, View.OnTouchListener, TextureView.SurfaceTextureListener {
@@ -71,6 +72,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
 
     public int currentState = -1;
     public int currentScreen = -1;
+    private static int firstFullScreen=0;
 
 
     public String url = "";
@@ -235,6 +237,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
                 onEvent(JCBuriedPoint.ON_ENTER_FULLSCREEN);
                 JCUtils.getAppCompActivity(getContext()).setRequestedOrientation(
                         ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                firstFullScreen=0;
                 startWindowFullscreen();
             }
         } else if (i == R.id.surface_container && currentState == CURRENT_STATE_ERROR) {
@@ -680,10 +683,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
 
     public static boolean backPress() {
         Log.i(TAG, "backPress");
-        if (JCVideoPlayerManager.getFirst() != null) {
-            return JCVideoPlayerManager.getFirst().backToOtherListener();
-        }
-        return false;
+        return JCVideoPlayerManager.getFirst() != null && JCVideoPlayerManager.getFirst().backToOtherListener();
     }
 
     public void startWindowFullscreen() {
@@ -727,8 +727,6 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
             JCVideoPlayerManager.putListener(jcVideoPlayer);
 
 
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -762,8 +760,6 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
             mJcVideoPlayer.addTextureView();
             JCVideoPlayerManager.putListener(mJcVideoPlayer);
 
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -955,8 +951,6 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
 
             jcVideoPlayer.startButton.performClick();
 
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -990,6 +984,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
     }
 
     public static class JCAutoFullscreenListener implements SensorEventListener {
+
         @Override
         public void onSensorChanged(SensorEvent event) {//可以得到传感器实时测量出来的变化值
             final float x = event.values[SensorManager.DATA_X];
@@ -998,11 +993,15 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
             //过滤掉用力过猛会有一个反向的大数值
             if (((x > -15 && x < -10) || (x < 15 && x > 10)) && Math.abs(y) < 1.5) {
                 if ((System.currentTimeMillis() - lastAutoFullscreenTime) > 2000) {
+                    lastAutoFullscreenTime = System.currentTimeMillis();
                     if (JCVideoPlayerManager.getFirst() != null) {
                         JCVideoPlayerManager.getFirst().autoFullscreen(x);
+                        firstFullScreen = 1;
                     }
-                    lastAutoFullscreenTime = System.currentTimeMillis();
                 }
+            } else if ((-5 < x && x < 5) && Math.abs(y) > 8.5) {
+                if (firstFullScreen == 1)
+                    backPress();
             }
         }
 

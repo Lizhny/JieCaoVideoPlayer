@@ -87,7 +87,7 @@ public class JCUtils {
     }
 
     public static void switchFullOrientation(Context context) {
-        getAppCompActivity(context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        getAppCompActivity(context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
     }
 
     public static void switchNormalOrientation(Context context) {
