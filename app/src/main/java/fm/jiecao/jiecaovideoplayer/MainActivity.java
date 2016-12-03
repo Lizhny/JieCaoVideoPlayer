@@ -24,13 +24,13 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     JCVideoPlayer.JCAutoFullscreenListener mSensorEventListener;
-    SensorManager                          mSensorManager;
+    SensorManager mSensorManager;
 
 
     JCVideoPlayerStandard mJcVideoPlayerStandard;
-    JCVideoPlayerSimple   mJcVideoPlayerSimple;
+    JCVideoPlayerSimple mJcVideoPlayerSimple;
 
-    Button mTinyWindow, mAutoTinyWindow, mAboutListView, mAboutUI, mPlayDirectly,mAboutWebView;
+    Button mTinyWindow, mAutoTinyWindow, mAboutListView, mAboutUI, mPlayDirectly, mAboutWebView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

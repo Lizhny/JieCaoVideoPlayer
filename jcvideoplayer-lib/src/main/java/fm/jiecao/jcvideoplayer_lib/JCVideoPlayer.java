@@ -235,8 +235,8 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
             } else {
                 Log.d(TAG, "toFullscreenActivity [" + this.hashCode() + "] ");
                 onEvent(JCBuriedPoint.ON_ENTER_FULLSCREEN);
-                JCUtils.getAppCompActivity(getContext()).setRequestedOrientation(
-                        ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+//                JCUtils.getAppCompActivity(getContext()).setRequestedOrientation(
+//                        ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                 firstFullScreen=0;
                 startWindowFullscreen();
             }
@@ -987,9 +987,10 @@ public abstract class JCVideoPlayer extends FrameLayout implements JCMediaPlayer
 
         @Override
         public void onSensorChanged(SensorEvent event) {//可以得到传感器实时测量出来的变化值
-            final float x = event.values[SensorManager.DATA_X];
-            float y = event.values[SensorManager.DATA_Y];
-            float z = event.values[SensorManager.DATA_Z];
+            final float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[SensorManager.DATA_X];
+//            float z1 = event.values[SensorManager.AXIS_MINUS_X];
             //过滤掉用力过猛会有一个反向的大数值
             if (((x > -15 && x < -10) || (x < 15 && x > 10)) && Math.abs(y) < 1.5) {
                 if ((System.currentTimeMillis() - lastAutoFullscreenTime) > 2000) {
